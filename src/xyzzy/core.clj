@@ -91,6 +91,22 @@
   (->> loc (iterate direction) rest (take-while identity)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; tree searching
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn find-next [loc pred direction]
+  (first (filter pred (followers loc direction))))
+
+(defn find [loc pred direction]
+  (if (pred loc) loc (find-next loc pred direction)))
+
+(defn find-next-node [loc pred direction]
+  (find-next loc (comp pred node) direction))
+
+(defn find-node [loc pred direction]
+  (find loc (comp pred node) direction))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; in-place zipper modification
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
