@@ -73,6 +73,24 @@
             sibling (-> parent :children count dec)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; complex zipper movement
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn- traverse [advance enter loc]
+  (if-let [down-loc (down loc)]
+          (enter down-loc)
+          (loop [next-loc loc]
+            (cond (advance next-loc) (advance next-loc)
+                  (up next-loc) (recur (up next-loc))
+                  :else nil))))
+
+(def backward (partial traverse left rightmost))
+(def forward  (partial traverse right leftmost))
+
+(defn followers [loc direction]
+  (->> loc (iterate direction) rest (take-while identity)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; in-place zipper modification
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
