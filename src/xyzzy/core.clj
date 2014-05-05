@@ -76,6 +76,20 @@
 ;; complex zipper movement
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn left-or-wrap
+  "Returns the location immediately to the left of `loc` (if it exists), the
+   rightmost sibling of `loc` (if it doesn't), or `loc` itself (if `loc` is at
+   the top of the tree)."
+  [loc]
+  (or (left loc) (rightmost loc) loc))
+
+(defn right-or-wrap
+  "Returns the location immediately to the right of `loc` (if it exists), the
+   leftmost sibling of `loc` (if it doesn't), or `loc` itself (if `loc` is at
+   the top of the tree)."
+  [loc]
+  (or (right loc) (leftmost loc) loc))
+
 (defn- traverse [advance enter loc]
   (if-let [down-loc (down loc)]
           (enter down-loc)
