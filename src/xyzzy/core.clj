@@ -1,4 +1,5 @@
-(ns xyzzy.core)
+(ns xyzzy.core
+  (:require [xyzzy.util :refer [update]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; path movement
@@ -42,3 +43,30 @@
    returning `loc` if the test passes and `nil` if it does not."
   [loc]
   (when (and (:path loc) (node loc)) loc))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; simple zipper movement
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn down [loc]
+  (check (update loc :path down*)))
+
+(defn child [loc n]
+  (check (-> loc down (update :path sibling n))))
+
+(defn left [loc]
+  (check (update loc :path left*)))
+
+(defn leftmost [loc]
+  (check (update loc :path leftmost*)))
+
+(defn right [loc]
+  (check (update loc :path right*)))
+
+(defn up [loc]
+  (check (update loc :path up*)))
+
+(defn rightmost [loc]
+  (when-let [parent (node (up loc))]
+    (check (update loc :path
+            sibling (-> parent :children count dec)))))
