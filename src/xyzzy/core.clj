@@ -1,5 +1,6 @@
 (ns xyzzy.core
-  (:require [xyzzy.util :refer [update]]))
+  (:refer-clojure :exclude [replace])
+  (:require [xyzzy.util :refer [lconj update]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; path movement
@@ -70,3 +71,19 @@
   (when-let [parent (node (up loc))]
     (check (update loc :path
             sibling (-> parent :children count dec)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; in-place zipper modification
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn replace [loc new-node]
+  (check (assoc-in loc
+          (lconj (full-path (:path loc)) :tree)
+          new-node)))
+
+(defn edit [loc f & args]
+  (replace loc (apply f (node loc) args)))
+
+(defn edit-parent [loc f & args]
+  (when-let [parent-loc (up loc)]
+    (apply edit parent-loc f (peek (:path loc)) args)))
