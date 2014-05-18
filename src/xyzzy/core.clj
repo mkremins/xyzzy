@@ -1,6 +1,6 @@
 (ns xyzzy.core
   (:refer-clojure :exclude [replace])
-  (:require [xyzzy.util :refer [lconj update]]))
+  (:require [xyzzy.util :refer [delete insert lconj update]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; path movement
@@ -135,3 +135,34 @@
 (defn edit-parent [loc f & args]
   (when-let [parent-loc (up loc)]
     (apply edit parent-loc f (peek (:path loc)) args)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; subtree insertion & removal
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn- insert-child* [parent n child]
+  (update parent :children insert n child))
+
+(defn- remove-child* [parent n]
+  (update parent :children delete n))
+
+(defn insert-child [loc n child]
+  (edit loc insert-child* n child))
+
+(defn insert-left [loc sib]
+  (let [n (-> loc :path peek)]
+    (-> loc up (insert-child n sib) (child (inc n)))))
+
+(defn insert-right [loc sib]
+  (let [n (-> loc :path peek inc)]
+    (-> loc up (insert-child n sib) (child (dec n)))))
+
+(defn remove [loc]
+  (let [n    (-> loc :path peek)
+        loc' (-> loc up (remove-child* n))]
+    (if (-> loc' node :children empty?)
+        loc'
+        (child loc' (max (dec n) 0)))))
+
+(defn remove-child [loc n]
+  (edit loc remove-child* n))
