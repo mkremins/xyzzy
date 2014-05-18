@@ -1,4 +1,4 @@
-(defproject mkremins/xyzzy "0.1.1-SNAPSHOT"
+(defproject mkremins/xyzzy "0.1.1"
   :description "Smarter zippers for Clojure"
   :url "http://github.com/mkremins/xyzzy"
   :license {:name "MIT License"
