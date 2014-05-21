@@ -159,7 +159,7 @@
 
 (defn remove [loc]
   (let [n    (-> loc :path peek)
-        loc' (-> loc up (remove-child* n))]
+        loc' (-> loc up (edit remove-child* n))]
     (if (-> loc' node :children empty?)
         loc'
         (child loc' (max (dec n) 0)))))
