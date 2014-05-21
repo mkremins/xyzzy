@@ -1,5 +1,5 @@
 (ns xyzzy.core
-  (:refer-clojure :exclude [replace])
+  (:refer-clojure :exclude [find next remove replace])
   (:require [xyzzy.util :refer [delete insert lconj update]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
