@@ -10,7 +10,7 @@ I use this in [Flense](https://github.com/mkremins/flense) to support paredit-li
 Add to your `project.clj`:
 
 ```clojure
-[mkremins/flense "0.1.3"]
+[mkremins/flense "0.1.4"]
 ```
 
 ## License
