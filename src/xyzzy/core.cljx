@@ -6,20 +6,20 @@
 ;; path movement
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn- sibling [path n]
+(defn- sibling* [path n]
   (when (>= n 0) (conj (pop path) n)))
 
 (defn- down* [path]
   (conj path 0))
 
 (defn- left* [path]
-  (when (seq path) (sibling path (dec (peek path)))))
+  (when (seq path) (sibling* path (dec (peek path)))))
 
 (defn leftmost* [path]
-  (when (seq path) (sibling path 0)))
+  (when (seq path) (sibling* path 0)))
 
 (defn- right* [path]
-  (when (seq path) (sibling path (inc (peek path)))))
+  (when (seq path) (sibling* path (inc (peek path)))))
 
 (defn- up* [path]
   (when (seq path) (pop path)))
@@ -52,8 +52,11 @@
 (defn down [loc]
   (check (update loc :path down*)))
 
+(defn sibling [loc n]
+  (check (update loc :path sibling* n)))
+
 (defn child [loc n]
-  (check (-> loc down (update :path sibling n))))
+  (-> loc down (sibling* n)))
 
 (defn left [loc]
   (check (update loc :path left*)))
@@ -69,8 +72,7 @@
 
 (defn rightmost [loc]
   (when-let [parent (node (up loc))]
-    (check (update loc :path
-            sibling (-> parent :children count dec)))))
+    (sibling loc (-> parent :children count dec))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; complex zipper movement
