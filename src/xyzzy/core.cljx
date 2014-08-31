@@ -109,6 +109,10 @@
 (defn followers [loc direction]
   (->> loc (iterate direction) rest (take-while identity)))
 
+(defn children [loc]
+  (let [down-loc (z/down loc)]
+    (cons down-loc (followers down-loc right))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; tree searching
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
