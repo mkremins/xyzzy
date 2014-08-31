@@ -74,6 +74,9 @@
   (when-let [parent (node (up loc))]
     (sibling loc (-> parent :children count dec))))
 
+(defn top [loc]
+  (assoc loc :path []))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; complex zipper movement
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
