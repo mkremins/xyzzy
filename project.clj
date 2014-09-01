@@ -11,4 +11,5 @@
                    :rules :clj}
                   {:source-paths ["src"]
                    :output-path "target/classes"
-                   :rules :cljs}]})
+                   :rules :cljs}]}
+  :prep-tasks ["cljx" "compile"])
