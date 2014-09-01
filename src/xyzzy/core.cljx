@@ -56,7 +56,7 @@
   (check (update loc :path sibling* n)))
 
 (defn child [loc n]
-  (-> loc down (sibling* n)))
+  (-> loc down (sibling n)))
 
 (defn left [loc]
   (check (update loc :path left*)))
