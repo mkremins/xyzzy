@@ -158,6 +158,12 @@
 (defn insert-child [loc n child]
   (edit loc insert-child* n child))
 
+(defn insert-leftmost-child [loc child]
+  (insert-child loc 0 child))
+
+(defn insert-rightmost-child [loc child]
+  (edit loc update :children conj child))
+
 (defn insert-left [loc sib]
   (let [n (-> loc :path peek)]
     (-> loc up (insert-child n sib) (child (inc n)))))
