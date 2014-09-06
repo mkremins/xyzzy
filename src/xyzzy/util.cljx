@@ -13,11 +13,6 @@
   [v idx item]
   (apply conj (subvec v 0 idx) item (subvec v idx)))
 
-(defn mapv-indexed
-  "Like `map-indexed`, but returns a vector like `mapv`."
-  [f coll]
-  (vec (map-indexed f coll)))
-
 (defn update
   "Like `update-in`, but takes a single key `k` as its second argument instead
    of a key sequence."

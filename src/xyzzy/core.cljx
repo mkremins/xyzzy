@@ -1,6 +1,6 @@
 (ns xyzzy.core
   (:refer-clojure :exclude [find next remove replace])
-  (:require [xyzzy.util :refer [delete insert mapv-indexed update]]))
+  (:require [xyzzy.util :refer [delete insert update]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; path movement
@@ -51,8 +51,10 @@
   ([node] (propagate-path node (:path node)))
   ([node path]
     (cond-> (assoc node :path path)
-      (:children node) (update :children
-                        mapv-indexed #(propagate-path %2 (conj path %1))))))
+      (:children node)
+      (update :children
+       #(mapv (fn [idx child] (propagate-path child (conj path idx)))
+              (range (count %)) %)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; simple zipper movement
