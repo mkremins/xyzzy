@@ -1,6 +1,6 @@
 (ns xyzzy.core
   (:refer-clojure :exclude [find next remove replace])
-  (:require [xyzzy.util :refer [delete insert lconj update]]))
+  (:require [xyzzy.util :refer [delete insert lconj mapv-indexed update]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; path movement
@@ -44,6 +44,15 @@
    returning `loc` if the test passes and `nil` if it does not."
   [loc]
   (when (and (:path loc) (node loc)) loc))
+
+(defn- propagate-path
+  "Updates `:path` values in `node` and any descendants of `node`. If provided,
+   `path` is the new `:path` value for `node` itself."
+  ([node] (propagate-path node (:path node)))
+  ([node path]
+    (cond-> (assoc node :path path)
+      (:children node) (update :children
+                        mapv-indexed #(propagate-path %2 (conj path %1))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; simple zipper movement
@@ -136,7 +145,7 @@
 (defn replace [loc new-node]
   (check (assoc-in loc
           (lconj (full-path (:path loc)) :tree)
-          new-node)))
+          (propagate-path new-node (:path loc)))))
 
 (defn edit [loc f & args]
   (replace loc (apply f (node loc) args)))
