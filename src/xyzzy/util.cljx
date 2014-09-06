@@ -13,11 +13,6 @@
   [v idx item]
   (apply conj (subvec v 0 idx) item (subvec v idx)))
 
-(defn lconj
-  "Prepends `item` to vector `v`."
-  [v item]
-  (vec (concat [item] v)))
-
 (defn mapv-indexed
   "Like `map-indexed`, but returns a vector like `mapv`."
   [f coll]

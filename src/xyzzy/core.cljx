@@ -1,6 +1,6 @@
 (ns xyzzy.core
   (:refer-clojure :exclude [find next remove replace])
-  (:require [xyzzy.util :refer [delete insert lconj mapv-indexed update]]))
+  (:require [xyzzy.util :refer [delete insert mapv-indexed update]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; path movement
@@ -29,7 +29,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn- full-path [path]
-  (vec (interleave (repeat :children) path)))
+  (interleave (repeat :children) path))
 
 (defn node [{:keys [tree path]}]
   (get-in tree (full-path path)))
@@ -144,7 +144,7 @@
 
 (defn replace [loc new-node]
   (check (assoc-in loc
-          (lconj (full-path (:path loc)) :tree)
+          (cons :tree (full-path (:path loc)))
           (propagate-path new-node (:path loc)))))
 
 (defn edit [loc f & args]
