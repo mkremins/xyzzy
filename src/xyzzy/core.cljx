@@ -45,17 +45,6 @@
   [loc]
   (when (and (:path loc) (node loc)) loc))
 
-(defn- propagate-path
-  "Updates `:path` values in `node` and any descendants of `node`. If provided,
-   `path` is the new `:path` value for `node` itself."
-  ([node] (propagate-path node (:path node)))
-  ([node path]
-    (cond-> (assoc node :path path)
-      (:children node)
-      (update :children
-       #(mapv (fn [idx child] (propagate-path child (conj path idx)))
-              (range (count %)) %)))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; simple zipper movement
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -147,7 +136,7 @@
 (defn replace [loc new-node]
   (check (assoc-in loc
           (cons :tree (full-path (:path loc)))
-          (propagate-path new-node (:path loc)))))
+          new-node)))
 
 (defn edit [loc f & args]
   (replace loc (apply f (node loc) args)))
