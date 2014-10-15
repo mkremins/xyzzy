@@ -95,19 +95,18 @@
   [loc]
   (or (right loc) (leftmost loc) loc))
 
-(defn- traverse [advance enter loc]
-  (if-let [down-loc (down loc)]
-    (enter down-loc)
-    (loop [next-loc loc]
-      (cond (advance next-loc) (advance next-loc)
-            (up next-loc) (recur (up next-loc))
-            :else nil))))
-
-(def prev (partial traverse left rightmost))
-(def next (partial traverse right leftmost))
-
 (defn followers [loc direction]
   (->> loc (iterate direction) rest (take-while identity)))
+
+(defn next [loc]
+  (or (down loc) (right loc)
+      (loop [loc' (up loc)]
+        (or (right loc') (when-let [loc' (up loc')] (recur loc'))))))
+
+(defn prev [loc]
+  (if-let [left-loc (left loc)]
+    (last (cons left-loc (followers left-loc (comp rightmost down))))
+    (up loc)))
 
 (defn children [loc]
   (let [down-loc (down loc)]
