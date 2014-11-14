@@ -109,7 +109,7 @@
     (up loc)))
 
 (defn children [loc]
-  (let [down-loc (down loc)]
+  (when-let [down-loc (down loc)]
     (cons down-loc (followers down-loc right))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
