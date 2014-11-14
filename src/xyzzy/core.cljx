@@ -39,7 +39,7 @@
   [node]
   (contains? node :children))
 
-(defn- check
+(defn check
   "Tests whether `(:path loc)` points to an extant node in `(:tree loc)`,
    returning `loc` if the test passes and `nil` if it does not."
   [loc]
