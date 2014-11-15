@@ -39,11 +39,14 @@
   [node]
   (contains? node :children))
 
+(defn ensure [loc pred]
+  (when (pred loc) loc))
+
 (defn check
   "Tests whether `(:path loc)` points to an extant node in `(:tree loc)`,
    returning `loc` if the test passes and `nil` if it does not."
   [loc]
-  (when (and (:path loc) (node loc)) loc))
+  (ensure loc (every-pred :path node)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; simple zipper movement
