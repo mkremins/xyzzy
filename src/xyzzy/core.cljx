@@ -1,6 +1,12 @@
 (ns xyzzy.core
-  (:refer-clojure :exclude [find next remove replace])
-  (:require [xyzzy.util :refer [delete insert update]]))
+  (:refer-clojure
+    :exclude [find next remove replace #+cljs update]
+    :rename {assoc assoc* dissoc dissoc*})
+  (:require [xyzzy.util :refer [delete insert]]))
+
+(def ^:private update*
+  #+clj xyzzy.util/update
+  #+cljs cljs.core/update)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; path movement
@@ -53,32 +59,32 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn down [loc]
-  (check (update loc :path down*)))
+  (check (update* loc :path down*)))
 
 (defn sibling [loc n]
-  (check (update loc :path sibling* n)))
+  (check (update* loc :path sibling* n)))
 
 (defn child [loc n]
   (-> loc down (sibling n)))
 
 (defn left [loc]
-  (check (update loc :path left*)))
+  (check (update* loc :path left*)))
 
 (defn leftmost [loc]
-  (check (update loc :path leftmost*)))
+  (check (update* loc :path leftmost*)))
 
 (defn right [loc]
-  (check (update loc :path right*)))
+  (check (update* loc :path right*)))
 
 (defn up [loc]
-  (check (update loc :path up*)))
+  (check (update* loc :path up*)))
 
 (defn rightmost [loc]
   (when-let [parent (node (up loc))]
     (sibling loc (-> parent :children count dec))))
 
 (defn top [loc]
-  (assoc loc :path []))
+  (assoc* loc :path []))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; complex zipper movement
@@ -147,15 +153,24 @@
   (when-let [parent-loc (up loc)]
     (apply edit parent-loc f (peek (:path loc)) args)))
 
+(defn assoc [loc & args]
+  (apply edit loc assoc* args))
+
+(defn dissoc [loc & args]
+  (apply edit loc dissoc* args))
+
+(defn update [loc & args]
+  (apply edit loc update* args))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; subtree insertion & removal
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn- insert-child* [parent n child]
-  (update parent :children insert n child))
+  (update* parent :children insert n child))
 
 (defn- remove-child* [parent n]
-  (update parent :children delete n))
+  (update* parent :children delete n))
 
 (defn insert-child [loc n child]
   (edit loc insert-child* n child))
@@ -164,7 +179,7 @@
   (insert-child loc 0 child))
 
 (defn insert-rightmost-child [loc child]
-  (edit loc update :children conj child))
+  (update loc :children conj child))
 
 (defn insert-left [loc sib]
   (let [n (-> loc :path peek)]
