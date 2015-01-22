@@ -1,12 +1,16 @@
 (ns xyzzy.core
   (:refer-clojure
-    :exclude [find next remove replace #+cljs update]
-    :rename {assoc assoc* dissoc dissoc*})
+    :exclude [assoc dissoc find next remove replace #+cljs update])
   (:require [xyzzy.util :refer [delete insert]]))
 
+(def ^:private assoc*
+  #+clj clojure.core/assoc #+cljs cljs.core/assoc)
+
+(def ^:private dissoc*
+  #+clj clojure.core/dissoc #+cljs cljs.core/dissoc)
+
 (def ^:private update*
-  #+clj xyzzy.util/update
-  #+cljs cljs.core/update)
+  #+clj xyzzy.util/update #+cljs cljs.core/update)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; path movement
