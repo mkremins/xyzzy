@@ -1,6 +1,6 @@
 (ns xyzzy.core
   (:refer-clojure
-    :exclude [assoc dissoc find next remove replace #+cljs update])
+    :exclude [assoc descendants dissoc find next remove replace #+cljs update])
   (:require [xyzzy.util :refer [delete insert]]))
 
 (def ^:private assoc*
@@ -124,6 +124,10 @@
 (defn children [loc]
   (when-let [down-loc (down loc)]
     (cons down-loc (followers down-loc right))))
+
+(defn descendants [loc]
+  (when-let [cs (children loc)]
+    (concat cs (mapcat descendants cs))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; tree searching
