@@ -54,7 +54,7 @@
 
 (defn check
   "Tests whether `(:path loc)` points to an extant node in `(:tree loc)`,
-   returning `loc` if the test passes and `nil` if it does not."
+  returning `loc` if the test passes and `nil` if it does not."
   [loc]
   (ensure loc (every-pred :path node)))
 
@@ -96,15 +96,15 @@
 
 (defn left-or-wrap
   "Returns the location immediately to the left of `loc` (if it exists), the
-   rightmost sibling of `loc` (if it doesn't), or `loc` itself (if `loc` is at
-   the top of the tree)."
+  rightmost sibling of `loc` (if it doesn't), or `loc` itself (if `loc` is at
+  the top of the tree)."
   [loc]
   (or (left loc) (rightmost loc) loc))
 
 (defn right-or-wrap
   "Returns the location immediately to the right of `loc` (if it exists), the
-   leftmost sibling of `loc` (if it doesn't), or `loc` itself (if `loc` is at
-   the top of the tree)."
+  leftmost sibling of `loc` (if it doesn't), or `loc` itself (if `loc` is at
+  the top of the tree)."
   [loc]
   (or (right loc) (leftmost loc) loc))
 
@@ -201,8 +201,8 @@
   (let [n    (-> loc :path peek)
         loc' (-> loc up (edit remove-child* n))]
     (if (-> loc' node :children empty?)
-        loc'
-        (child loc' (max (dec n) 0)))))
+      loc'
+      (child loc' (max (dec n) 0)))))
 
 (defn remove-child [loc n]
   (edit loc remove-child* n))
